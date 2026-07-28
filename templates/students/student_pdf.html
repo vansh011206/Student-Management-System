@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Student Academic Report Card</title>
+  <style>
+    @page {
+      size: a4 portrait;
+      margin: 1.5cm;
+    }
+    body {
+      font-family: Helvetica, Arial, sans-serif;
+      color: #1E293B;
+      font-size: 12px;
+      line-height: 1.4;
+    }
+    .header-table {
+      width: 100%;
+      border-bottom: 2px solid #4F46E5;
+      padding-bottom: 12px;
+      margin-bottom: 20px;
+    }
+    .school-title {
+      font-size: 24px;
+      font-weight: bold;
+      color: #4F46E5;
+    }
+    .report-title {
+      font-size: 14px;
+      font-weight: bold;
+      color: #64748B;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+    .section-title {
+      font-size: 14px;
+      font-weight: bold;
+      color: #4F46E5;
+      border-bottom: 1px solid #E2E8F0;
+      padding-bottom: 4px;
+      margin-top: 15px;
+      margin-bottom: 10px;
+    }
+    .info-table {
+      width: 100%;
+      margin-bottom: 15px;
+    }
+    .info-table td {
+      padding: 5px;
+    }
+    .info-label {
+      font-weight: bold;
+      color: #64748B;
+      width: 130px;
+    }
+    .data-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 10px;
+      margin-bottom: 20px;
+    }
+    .data-table th {
+      background-color: #EEF2FF;
+      color: #4F46E5;
+      font-weight: bold;
+      text-align: left;
+      padding: 8px;
+      border-bottom: 1px solid #C7D2FE;
+    }
+    .data-table td {
+      padding: 8px;
+      border-bottom: 1px solid #E2E8F0;
+    }
+    .badge-pass {
+      color: #059669;
+      font-weight: bold;
+    }
+    .badge-fail {
+      color: #DC2626;
+      font-weight: bold;
+    }
+    .footer-signature {
+      margin-top: 40px;
+      width: 100%;
+    }
+    .signature-box {
+      text-align: center;
+      border-top: 1px solid #94A3B8;
+      padding-top: 6px;
+      width: 180px;
+      font-size: 11px;
+      color: #64748B;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- HEADER -->
+  <table class="header-table">
+    <tr>
+      <td>
+        <div class="school-title">EduManage International Academy</div>
+        <div style="color: #64748B; font-size: 11px; margin-top: 3px;">100 Education Way, Knowledge City, NY • Phone: +1 555-0100</div>
+      </td>
+      <td style="text-align: right;">
+        <div class="report-title">Official Student Report Card</div>
+        <div style="font-size: 11px; color: #64748B;">Date Generated: {% now "F d, Y" %}</div>
+      </td>
+    </tr>
+  </table>
+
+  <!-- STUDENT PERSONAL INFO -->
+  <div class="section-title">Student Profile Information</div>
+  <table class="info-table">
+    <tr>
+      <td class="info-label">Full Name:</td>
+      <td><strong>{{ student.user.get_full_name }}</strong></td>
+      <td class="info-label">Admission Number:</td>
+      <td><strong>{{ student.admission_number }}</strong></td>
+    </tr>
+    <tr>
+      <td class="info-label">Class:</td>
+      <td>{{ student.student_class.name }}</td>
+      <td class="info-label">Roll Number:</td>
+      <td>#{{ student.roll_number }}</td>
+    </tr>
+    <tr>
+      <td class="info-label">Date of Birth:</td>
+      <td>{{ student.date_of_birth|date:"M d, Y" }}</td>
+      <td class="info-label">Blood Group:</td>
+      <td>{{ student.blood_group }}</td>
+    </tr>
+    <tr>
+      <td class="info-label">Parent Name:</td>
+      <td>{{ student.parent_name }}</td>
+      <td class="info-label">Parent Phone:</td>
+      <td>{{ student.parent_phone }}</td>
+    </tr>
+  </table>
+
+  <!-- ATTENDANCE SUMMARY -->
+  <div class="section-title">Attendance Summary</div>
+  <table class="info-table">
+    <tr>
+      <td class="info-label">Total Days:</td>
+      <td>{{ total_days }}</td>
+      <td class="info-label">Days Present:</td>
+      <td>{{ present_days }}</td>
+      <td class="info-label">Attendance Rate:</td>
+      <td><strong>{{ attendance_pct }}%</strong></td>
+    </tr>
+  </table>
+
+  <!-- ACADEMIC RESULTS TABLE -->
+  <div class="section-title">Academic Examination Results</div>
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th>Exam Name</th>
+        <th>Subject</th>
+        <th>Marks Obtained</th>
+        <th>Total Marks</th>
+        <th>Percentage</th>
+        <th>Grade</th>
+        <th>Status</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for r in results %}
+        <tr>
+          <td><strong>{{ r.exam.name }}</strong></td>
+          <td>{{ r.exam.subject.name }}</td>
+          <td>{{ r.marks_obtained }}</td>
+          <td>{{ r.exam.total_marks }}</td>
+          <td>{{ r.percentage }}%</td>
+          <td><strong>{{ r.grade }}</strong></td>
+          <td>
+            {% if r.is_pass %}
+              <span class="badge-pass">PASS</span>
+            {% else %}
+              <span class="badge-fail">FAIL</span>
+            {% endif %}
+          </td>
+        </tr>
+      {% empty %}
+        <tr>
+          <td colspan="7" style="text-align: center; padding: 15px; color: #64748B;">No examination records found.</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+  <!-- SIGNATURE SECTION -->
+  <table class="footer-signature">
+    <tr>
+      <td>
+        <div class="signature-box">Class Teacher Signature</div>
+      </td>
+      <td style="text-align: right;">
+        <div class="signature-box" style="margin-left: auto;">Principal / Controller Signature</div>
+      </td>
+    </tr>
+  </table>
+
+</body>
+</html>

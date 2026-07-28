@@ -1,0 +1,173 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}My Exam Results{% endblock %}
+{% block page_title %}Academic Performance{% endblock %}
+
+{% block content %}
+<div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-4">
+  <div>
+    <h3 class="fw-bold font-poppins mb-1">My Examination Results</h3>
+    <p class="text-secondary small mb-0">Detailed breakdown of subject scores, percentages, and grade cards.</p>
+  </div>
+  <div>
+    <a href="{% url 'student_pdf' student.id %}" target="_blank" class="btn btn-outline-danger font-poppins shadow-sm">
+      <i class="fa-solid fa-file-pdf me-1"></i> Download PDF Report Card
+    </a>
+  </div>
+</div>
+
+<!-- STAT CARDS ROW -->
+<div class="row g-3 mb-4">
+  <div class="col-12 col-sm-6 col-xl-3">
+    <div class="stat-card">
+      <div class="stat-icon" style="background-color: #EEF2FF; color: #4F46E5;">
+        <i class="fa-solid fa-chart-line"></i>
+      </div>
+      <div>
+        <div class="stat-number">{{ avg_percentage }}%</div>
+        <div class="stat-label">Average Score</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-12 col-sm-6 col-xl-3">
+    <div class="stat-card">
+      <div class="stat-icon" style="background-color: #ECFDF5; color: #10B981;">
+        <i class="fa-solid fa-trophy"></i>
+      </div>
+      <div>
+        <div class="stat-number fs-4">{% if best_result %}{{ best_result.exam.subject.name }}{% else %}-{% endif %}</div>
+        <div class="stat-label">Best Subject ({% if best_result %}{{ best_result.percentage }}%{% else %}0%{% endif %})</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-12 col-sm-6 col-xl-3">
+    <div class="stat-card">
+      <div class="stat-icon" style="background-color: #FFFBEB; color: #F59E0B;">
+        <i class="fa-solid fa-circle-check"></i>
+      </div>
+      <div>
+        <div class="stat-number">{{ pass_rate }}%</div>
+        <div class="stat-label">Exam Pass Rate</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-12 col-sm-6 col-xl-3">
+    <div class="stat-card">
+      <div class="stat-icon" style="background-color: #F3E8FF; color: #9333EA;">
+        <i class="fa-solid fa-file-signature"></i>
+      </div>
+      <div>
+        <div class="stat-number">{{ results|length }}</div>
+        <div class="stat-label">Exams Appeared</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- PERFORMANCE CHART -->
+<div class="card mb-4">
+  <div class="card-header">
+    <h5 class="card-title"><i class="fa-solid fa-chart-bar text-primary me-2"></i>Subject Performance Breakdown (%)</h5>
+  </div>
+  <div class="card-body p-3">
+    <div style="height: 280px; position: relative;">
+      <canvas id="resultsBarChart"></canvas>
+    </div>
+  </div>
+</div>
+
+<!-- DETAILED RESULTS TABLE -->
+<div class="card">
+  <div class="card-header">
+    <h5 class="card-title"><i class="fa-solid fa-list-check me-2 text-primary"></i>All Examination Records</h5>
+  </div>
+  <div class="table-responsive">
+    <table class="table align-middle">
+      <thead>
+        <tr>
+          <th>Exam</th>
+          <th>Subject</th>
+          <th>Date</th>
+          <th>Score Obtained</th>
+          <th>Total Marks</th>
+          <th>Percentage</th>
+          <th>Grade</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for r in results %}
+          <tr>
+            <td class="fw-semibold text-dark">{{ r.exam.name }}</td>
+            <td><span class="badge badge-soft-primary">{{ r.exam.subject.name }}</span></td>
+            <td><small class="text-muted">{{ r.exam.exam_date|date:"M d, Y" }}</small></td>
+            <td><strong class="font-poppins text-dark">{{ r.marks_obtained }}</strong></td>
+            <td>{{ r.exam.total_marks }}</td>
+            <td>{{ r.percentage }}%</td>
+            <td>
+              <span class="badge {% if r.grade == 'F' %}badge-soft-danger{% elif r.grade == 'A+' or r.grade == 'A' %}badge-soft-primary{% else %}badge-soft-success{% endif %}">
+                {{ r.grade }}
+              </span>
+            </td>
+            <td>
+              {% if r.is_pass %}
+                <span class="badge badge-soft-success">PASS</span>
+              {% else %}
+                <span class="badge badge-soft-danger">FAIL</span>
+              {% endif %}
+            </td>
+          </tr>
+        {% empty %}
+          <tr>
+            <td colspan="8" class="text-center py-5 text-muted">No examination results available.</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+const chartLabels = {{ chart_labels|safe }};
+const chartData = {{ chart_data|safe }};
+const ctxBar = document.getElementById('resultsBarChart').getContext('2d');
+new Chart(ctxBar, {
+  type: 'bar',
+  data: {
+    labels: chartLabels,
+    datasets: [{
+      label: 'Score Percentage (%)',
+      data: chartData,
+      backgroundColor: '#4F46E5',
+      borderRadius: 8,
+      borderSkipped: false,
+      barThickness: 32
+    }]
+  },
+  options: {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: { display: false }
+    },
+    scales: {
+      y: {
+        min: 0,
+        max: 100,
+        grid: { color: '#F1F5F9' },
+        ticks: { callback: v => v + '%' }
+      },
+      x: {
+        grid: { display: false }
+      }
+    }
+  }
+});
+</script>
+{% endblock %}

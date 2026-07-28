@@ -1,0 +1,133 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Student Dashboard{% endblock %}
+{% block page_title %}Student Portal{% endblock %}
+
+{% block content %}
+<!-- WELCOME BANNER CARD -->
+<div class="card border-0 text-white mb-4" style="background: linear-gradient(135deg, #4F46E5, #6366F1); border-radius: 20px;">
+  <div class="card-body p-4 d-flex flex-column flex-md-row align-items-md-center justify-content-between gap-3">
+    <div class="d-flex align-items-center gap-3">
+      {% if user.profile_pic %}
+        <img src="{{ user.profile_pic.url }}" alt="{{ user.username }}" class="rounded-circle border border-3 border-white shadow" style="width: 72px; height: 72px; object-fit: cover;">
+      {% else %}
+        <img src="{% static 'images/default_avatar.png' %}" alt="Avatar" class="rounded-circle border border-3 border-white shadow" style="width: 72px; height: 72px; object-fit: cover;">
+      {% endif %}
+      <div>
+        <h3 class="fw-bold font-poppins text-white mb-1">Hello, {{ user.get_full_name|default:user.username }}!</h3>
+        <div class="opacity-75 small">
+          <span><i class="fa-solid fa-graduation-cap me-1"></i> {{ student.student_class.name }} (Roll #{{ student.roll_number }})</span>
+          <span class="ms-3"><i class="fa-solid fa-id-card me-1"></i> {{ student.admission_number }}</span>
+        </div>
+      </div>
+    </div>
+    <div>
+      <a href="{% url 'student_pdf' student.id %}" target="_blank" class="btn btn-light font-poppins fw-semibold text-primary rounded-3 shadow-sm">
+        <i class="fa-solid fa-file-pdf text-danger me-1"></i> Download Report Card
+      </a>
+    </div>
+  </div>
+</div>
+
+<!-- STAT CARDS ROW -->
+<div class="row g-3 mb-4">
+  <div class="col-12 col-sm-6 col-xl-3">
+    <div class="stat-card">
+      <div class="stat-icon" style="background-color: #EEF2FF; color: #4F46E5;">
+        <i class="fa-solid fa-calendar-check"></i>
+      </div>
+      <div>
+        <div class="stat-number">{{ attendance_pct }}%</div>
+        <div class="stat-label">Attendance Rate</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-12 col-sm-6 col-xl-3">
+    <div class="stat-card">
+      <div class="stat-icon" style="background-color: #ECFDF5; color: #10B981;">
+        <i class="fa-solid fa-chart-line"></i>
+      </div>
+      <div>
+        <div class="stat-number">{{ avg_percentage }}%</div>
+        <div class="stat-label">Average Score</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-12 col-sm-6 col-xl-3">
+    <div class="stat-card">
+      <div class="stat-icon" style="background-color: #FFFBEB; color: #F59E0B;">
+        <i class="fa-solid fa-user-check"></i>
+      </div>
+      <div>
+        <div class="stat-number">{{ present_days }} / {{ total_days }}</div>
+        <div class="stat-label">Days Present</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-12 col-sm-6 col-xl-3">
+    <div class="stat-card">
+      <div class="stat-icon" style="background-color: #F3E8FF; color: #9333EA;">
+        <i class="fa-solid fa-droplet"></i>
+      </div>
+      <div>
+        <div class="stat-number">{{ student.blood_group }}</div>
+        <div class="stat-label">Blood Group</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- RECENT RESULTS TABLE -->
+<div class="card">
+  <div class="card-header">
+    <h5 class="card-title"><i class="fa-solid fa-award text-primary me-2"></i>Recent Examination Results</h5>
+    <a href="{% url 'my_results' %}" class="btn btn-sm btn-light text-primary font-poppins">View All Results <i class="fa-solid fa-arrow-right ms-1"></i></a>
+  </div>
+  <div class="table-responsive">
+    <table class="table align-middle">
+      <thead>
+        <tr>
+          <th>Exam</th>
+          <th>Subject</th>
+          <th>Date</th>
+          <th>Score</th>
+          <th>Percentage</th>
+          <th>Grade</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for r in recent_results %}
+          <tr>
+            <td class="fw-semibold text-dark">{{ r.exam.name }}</td>
+            <td><span class="badge badge-soft-primary">{{ r.exam.subject.name }}</span></td>
+            <td><small class="text-muted">{{ r.exam.exam_date|date:"M d, Y" }}</small></td>
+            <td><strong>{{ r.marks_obtained }}</strong> / {{ r.exam.total_marks }}</td>
+            <td>{{ r.percentage }}%</td>
+            <td>
+              <span class="badge {% if r.grade == 'F' %}badge-soft-danger{% elif r.grade == 'A+' or r.grade == 'A' %}badge-soft-primary{% else %}badge-soft-success{% endif %}">
+                {{ r.grade }}
+              </span>
+            </td>
+            <td>
+              {% if r.is_pass %}
+                <span class="badge badge-soft-success">PASSED</span>
+              {% else %}
+                <span class="badge badge-soft-danger">FAILED</span>
+              {% endif %}
+            </td>
+          </tr>
+        {% empty %}
+          <tr>
+            <td colspan="7" class="text-center py-4 text-muted">No examination results available yet.</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

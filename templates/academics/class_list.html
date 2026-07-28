@@ -1,0 +1,78 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Class Management{% endblock %}
+{% block page_title %}Academic Classes{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+  <div>
+    <h3 class="fw-bold font-poppins mb-1">Academic Classes</h3>
+    <p class="text-secondary small mb-0">Configure and manage active academic grade levels and sections.</p>
+  </div>
+</div>
+
+<div class="row g-4">
+  <!-- ADD CLASS FORM (col-4) -->
+  <div class="col-12 col-lg-4">
+    <div class="card p-4">
+      <h5 class="fw-bold font-poppins text-dark mb-3"><i class="fa-solid fa-plus me-2 text-primary"></i>Add New Class</h5>
+      <form method="POST">
+        {% csrf_token %}
+        <div class="mb-3">
+          <label class="form-label">Class Name *</label>
+          {{ form.name }}
+          <small class="form-text text-muted">e.g. Class 10, Class 11-A</small>
+        </div>
+        <button type="submit" class="btn btn-primary w-100 font-poppins fw-semibold">Save Class</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- CLASS LIST TABLE (col-8) -->
+  <div class="col-12 col-lg-8">
+    <div class="card">
+      <div class="card-header">
+        <h5 class="card-title"><i class="fa-solid fa-school me-2 text-primary"></i>Active Classes</h5>
+        <span class="badge badge-soft-primary">{{ classes.count }} Total</span>
+      </div>
+      <div class="table-responsive">
+        <table class="table align-middle">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Class Name</th>
+              <th>Enrolled Students</th>
+              <th>Associated Subjects</th>
+              <th class="text-end">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for c in classes %}
+              <tr>
+                <td class="fw-semibold text-muted">{{ forloop.counter }}</td>
+                <td><strong class="text-dark font-poppins fs-6">{{ c.name }}</strong></td>
+                <td>
+                  <span class="badge badge-soft-success">{{ c.students.count }} Students</span>
+                </td>
+                <td>
+                  <span class="badge badge-soft-primary">{{ c.subjects.count }} Subjects</span>
+                </td>
+                <td class="text-end">
+                  <button type="button" onclick="confirmDelete('{% url 'delete_class' c.id %}', '{{ c.name|escapejs }}')" class="btn-action btn-action-delete" title="Delete Class">
+                    <i class="fa-regular fa-trash-can"></i>
+                  </button>
+                </td>
+              </tr>
+            {% empty %}
+              <tr>
+                <td colspan="5" class="text-center py-4 text-muted">No classes configured yet.</td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

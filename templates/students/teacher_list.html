@@ -1,0 +1,96 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Teacher Management{% endblock %}
+{% block page_title %}Faculty Teachers{% endblock %}
+
+{% block content %}
+<div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-4">
+  <div>
+    <h3 class="fw-bold font-poppins mb-1">Faculty Teachers Directory</h3>
+    <p class="text-secondary small mb-0">Manage teaching staff profiles, assigned classes, and qualifications.</p>
+  </div>
+  <a href="{% url 'add_teacher' %}" class="btn btn-primary font-poppins shadow-sm">
+    <i class="fa-solid fa-plus me-1"></i> Add Faculty Teacher
+  </a>
+</div>
+
+<div class="card mb-4">
+  <div class="card-body p-3">
+    <form method="GET" class="row g-2 align-items-center">
+      <div class="col-12 col-md-9">
+        <div class="position-relative">
+          <input type="text" name="q" value="{{ query }}" class="form-control ps-5" placeholder="Search by name, employee ID, qualification...">
+          <i class="fa-solid fa-magnifying-glass position-absolute top-50 start-0 translate-middle-y ms-3 text-secondary"></i>
+        </div>
+      </div>
+      <div class="col-12 col-md-3">
+        <button type="submit" class="btn btn-primary w-100 font-poppins"><i class="fa-solid fa-filter me-1"></i> Search</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<div class="card">
+  <div class="table-responsive">
+    <table class="table align-middle">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Photo</th>
+          <th>Teacher Name</th>
+          <th>Emp ID</th>
+          <th>Assigned Subject</th>
+          <th>Assigned Class</th>
+          <th>Qualification</th>
+          <th>Joined</th>
+          <th class="text-end">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for t in teachers %}
+          <tr>
+            <td class="fw-semibold text-muted">{{ forloop.counter }}</td>
+            <td>
+              {% if t.user.profile_pic %}
+                <img src="{{ t.user.profile_pic.url }}" alt="{{ t.user.username }}" class="avatar">
+              {% else %}
+                <img src="{% static 'images/default_avatar.png' %}" alt="Avatar" class="avatar">
+              {% endif %}
+            </td>
+            <td>
+              <div class="fw-semibold text-dark">{{ t.user.get_full_name|default:t.user.username }}</div>
+              <small class="text-muted">{{ t.user.email }}</small>
+            </td>
+            <td><code class="text-primary font-monospace fw-bold">{{ t.employee_id }}</code></td>
+            <td><span class="badge badge-soft-primary">{{ t.subject.name|default:"Not Assigned" }}</span></td>
+            <td><span class="badge badge-soft-success">{{ t.assigned_class.name|default:"None" }}</span></td>
+            <td><small class="text-dark fw-medium">{{ t.qualification }}</small></td>
+            <td><small class="text-muted">{{ t.joining_date|date:"M d, Y" }}</small></td>
+            <td class="text-end">
+              <div class="d-inline-flex gap-1">
+                <a href="{% url 'edit_teacher' t.id %}" class="btn-action btn-action-edit" title="Edit Teacher">
+                  <i class="fa-regular fa-pen-to-square"></i>
+                </a>
+                <button type="button" onclick="confirmDelete('{% url 'delete_teacher' t.id %}', '{{ t.user.get_full_name|default:t.user.username|escapejs }}')" class="btn-action btn-action-delete" title="Delete Teacher">
+                  <i class="fa-regular fa-trash-can"></i>
+                </button>
+              </div>
+            </td>
+          </tr>
+        {% empty %}
+          <tr>
+            <td colspan="9" class="text-center py-5">
+              <div class="py-3">
+                <i class="fa-solid fa-chalkboard-user display-4 text-muted opacity-50 mb-3"></i>
+                <h5 class="fw-bold font-poppins">No Teachers Found</h5>
+                <p class="text-muted small">No teacher records available in system database.</p>
+              </div>
+            </td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

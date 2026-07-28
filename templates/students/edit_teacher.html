@@ -1,0 +1,87 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Edit Teacher - {{ user_obj.get_full_name }}{% endblock %}
+{% block page_title %}Edit Teacher{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+  <div>
+    <h3 class="fw-bold font-poppins mb-1">Edit Teacher: {{ user_obj.get_full_name|default:user_obj.username }}</h3>
+    <p class="text-secondary small mb-0">Employee ID: <code class="text-primary fw-bold">{{ teacher.employee_id }}</code></p>
+  </div>
+  <a href="{% url 'teacher_list' %}" class="btn btn-light border font-poppins">
+    <i class="fa-solid fa-arrow-left me-1"></i> Back to List
+  </a>
+</div>
+
+<div class="card p-4">
+  <form method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+
+    <div class="form-section-title">1. Account Information</div>
+    <div class="row g-3 mb-4">
+      <div class="col-12 col-md-6">
+        <label class="form-label">First Name</label>
+        <input type="text" name="first_name" value="{{ user_obj.first_name }}" class="form-control" required>
+      </div>
+      <div class="col-12 col-md-6">
+        <label class="form-label">Last Name</label>
+        <input type="text" name="last_name" value="{{ user_obj.last_name }}" class="form-control" required>
+      </div>
+      <div class="col-12 col-md-6">
+        <label class="form-label">Email Address</label>
+        <input type="email" name="email" value="{{ user_obj.email }}" class="form-control">
+      </div>
+      <div class="col-12 col-md-6">
+        <label class="form-label">Phone Number</label>
+        <input type="text" name="phone" value="{{ user_obj.phone }}" class="form-control">
+      </div>
+      <div class="col-12">
+        <label class="form-label">Reset Password (Optional)</label>
+        <input type="password" name="password" class="form-control" placeholder="New password">
+      </div>
+    </div>
+
+    <div class="form-section-title">2. Teaching Details</div>
+    <div class="row g-3 mb-4">
+      <div class="col-12 col-md-6">
+        <label class="form-label">Assigned Subject</label>
+        {{ teacher_form.subject }}
+      </div>
+      <div class="col-12 col-md-6">
+        <label class="form-label">Assigned Class</label>
+        {{ teacher_form.assigned_class }}
+      </div>
+      <div class="col-12 col-md-6">
+        <label class="form-label">Joining Date</label>
+        {{ teacher_form.joining_date }}
+      </div>
+      <div class="col-12 col-md-6">
+        <label class="form-label">Qualification</label>
+        {{ teacher_form.qualification }}
+      </div>
+    </div>
+
+    <div class="form-section-title">3. Photo Update</div>
+    <div class="row g-3 mb-4 align-items-center">
+      <div class="col-12 col-md-3 text-center">
+        {% if user_obj.profile_pic %}
+          <img src="{{ user_obj.profile_pic.url }}" id="profilePreview" class="rounded-circle border border-2 border-primary" style="width: 90px; height: 90px; object-fit: cover;">
+        {% else %}
+          <img src="{% static 'images/default_avatar.png' %}" id="profilePreview" class="rounded-circle border border-2 border-primary" style="width: 90px; height: 90px; object-fit: cover;">
+        {% endif %}
+      </div>
+      <div class="col-12 col-md-9">
+        <label class="form-label">Select Image</label>
+        <input type="file" name="profile_pic" class="form-control" id="profileImageInput" accept="image/*">
+      </div>
+    </div>
+
+    <div class="d-flex justify-content-end gap-2 border-top pt-3">
+      <a href="{% url 'teacher_list' %}" class="btn btn-light border px-4 font-poppins">Cancel</a>
+      <button type="submit" class="btn btn-primary px-4 font-poppins fw-semibold">Save Changes</button>
+    </div>
+  </form>
+</div>
+{% endblock %}

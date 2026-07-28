@@ -1,0 +1,129 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}My Attendance{% endblock %}
+{% block page_title %}My Attendance Record{% endblock %}
+
+{% block content %}
+<div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-4">
+  <div>
+    <h3 class="fw-bold font-poppins mb-1">My Attendance History</h3>
+    <p class="text-secondary small mb-0">Track your daily roll call and attendance percentage.</p>
+  </div>
+</div>
+
+<!-- MONTH FILTER -->
+<div class="card mb-4">
+  <div class="card-body p-3">
+    <form method="GET" class="row g-2 align-items-center">
+      <div class="col-12 col-md-5">
+        <label class="form-label mb-1 small fw-semibold">Select Month</label>
+        <select name="month" class="form-select" onchange="this.form.submit()">
+          {% for m_num, m_name in months %}
+            <option value="{{ m_num }}" {% if month == m_num %}selected{% endif %}>{{ m_name }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div class="col-12 col-md-5">
+        <label class="form-label mb-1 small fw-semibold">Select Year</label>
+        <select name="year" class="form-select" onchange="this.form.submit()">
+          <option value="{{ year }}">{{ year }}</option>
+        </select>
+      </div>
+      <div class="col-12 col-md-2 d-flex align-items-end">
+        <button type="submit" class="btn btn-primary w-100 font-poppins mt-3 mt-md-0">View Calendar</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- STAT CARDS ROW -->
+<div class="row g-3 mb-4">
+  <div class="col-12 col-sm-6 col-xl-3">
+    <div class="stat-card">
+      <div class="stat-icon" style="background-color: #EEF2FF; color: #4F46E5;">
+        <i class="fa-solid fa-chart-pie"></i>
+      </div>
+      <div>
+        <div class="stat-number">{{ percentage }}%</div>
+        <div class="stat-label">Overall Rate</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-12 col-sm-6 col-xl-3">
+    <div class="stat-card">
+      <div class="stat-icon" style="background-color: #ECFDF5; color: #10B981;">
+        <i class="fa-solid fa-check"></i>
+      </div>
+      <div>
+        <div class="stat-number">{{ present_days }}</div>
+        <div class="stat-label">Days Present</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-12 col-sm-6 col-xl-3">
+    <div class="stat-card">
+      <div class="stat-icon" style="background-color: #FEF2F2; color: #EF4444;">
+        <i class="fa-solid fa-xmark"></i>
+      </div>
+      <div>
+        <div class="stat-number">{{ absent_days }}</div>
+        <div class="stat-label">Days Absent</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-12 col-sm-6 col-xl-3">
+    <div class="stat-card">
+      <div class="stat-icon" style="background-color: #FFFBEB; color: #F59E0B;">
+        <i class="fa-solid fa-clock"></i>
+      </div>
+      <div>
+        <div class="stat-number">{{ late_days }}</div>
+        <div class="stat-label">Days Late</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- CSS GRID CALENDAR -->
+<div class="card p-4 mb-4">
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <h5 class="fw-bold font-poppins mb-0"><i class="fa-solid fa-calendar-days text-primary me-2"></i>{{ month_name }} {{ year }}</h5>
+    <div class="d-flex gap-3 small">
+      <span><span class="d-inline-block rounded-circle bg-success me-1" style="width: 10px; height: 10px;"></span> Present</span>
+      <span><span class="d-inline-block rounded-circle bg-danger me-1" style="width: 10px; height: 10px;"></span> Absent</span>
+      <span><span class="d-inline-block rounded-circle bg-warning me-1" style="width: 10px; height: 10px;"></span> Late</span>
+    </div>
+  </div>
+
+  <div class="calendar-grid">
+    <div class="calendar-header-day">Mon</div>
+    <div class="calendar-header-day">Tue</div>
+    <div class="calendar-header-day">Wed</div>
+    <div class="calendar-header-day">Thu</div>
+    <div class="calendar-header-day">Fri</div>
+    <div class="calendar-header-day">Sat</div>
+    <div class="calendar-header-day">Sun</div>
+
+    {% for d in calendar_days %}
+      {% if d.day == '' %}
+        <div class="calendar-day-box empty"></div>
+      {% else %}
+        <div class="calendar-day-box status-{{ d.status }}">
+          <span>{{ d.day }}</span>
+          {% if d.status == 'present' %}
+            <small class="badge badge-soft-success py-0 px-1" style="font-size: 0.65rem;">P</small>
+          {% elif d.status == 'absent' %}
+            <small class="badge badge-soft-danger py-0 px-1" style="font-size: 0.65rem;">A</small>
+          {% elif d.status == 'late' %}
+            <small class="badge badge-soft-warning py-0 px-1" style="font-size: 0.65rem;">L</small>
+          {% endif %}
+        </div>
+      {% endif %}
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}

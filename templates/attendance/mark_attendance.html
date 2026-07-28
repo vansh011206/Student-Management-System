@@ -1,0 +1,136 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load attendance_tags %}
+
+{% block title %}Mark Attendance{% endblock %}
+{% block page_title %}Daily Roll Call{% endblock %}
+
+{% block content %}
+<div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-4">
+  <div>
+    <h3 class="fw-bold font-poppins mb-1">Mark Daily Attendance</h3>
+    <p class="text-secondary small mb-0">Record daily class attendance for students.</p>
+  </div>
+  <div class="mt-3 mt-md-0 d-flex gap-2">
+    <button type="button" id="selectAllPresent" class="btn btn-outline-success font-poppins">
+      <i class="fa-solid fa-check-double me-1"></i> Select All Present
+    </button>
+    <a href="{% url 'attendance_report' %}" class="btn btn-light border font-poppins">
+      <i class="fa-solid fa-chart-column me-1"></i> Attendance Report
+    </a>
+  </div>
+</div>
+
+<!-- CLASS & DATE SELECTION BAR -->
+<div class="card mb-4">
+  <div class="card-body p-3">
+    <form method="GET" class="row g-2 align-items-center">
+      <div class="col-12 col-md-5">
+        <label class="form-label mb-1 small fw-semibold">Select Class</label>
+        <select name="class_id" class="form-select" onchange="this.form.submit()">
+          {% for c in classes %}
+            <option value="{{ c.id }}" {% if assigned_class and assigned_class.id == c.id %}selected{% endif %}>{{ c.name }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div class="col-12 col-md-5">
+        <label class="form-label mb-1 small fw-semibold">Select Date</label>
+        <input type="date" name="date" value="{{ selected_date|date:'Y-m-d' }}" class="form-control" onchange="this.form.submit()">
+      </div>
+      <div class="col-12 col-md-2 d-flex align-items-end">
+        <button type="submit" class="btn btn-primary w-100 font-poppins mt-3 mt-md-0">Load Roll Call</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- INFO SUMMARY ALERT -->
+<div class="alert {% if already_marked %}alert-warning{% else %}alert-success{% endif %} d-flex align-items-center justify-content-between mb-4">
+  <div>
+    <i class="fa-solid {% if already_marked %}fa-triangle-exclamation{% else %}fa-circle-check{% endif %} fs-5 me-2"></i>
+    <strong>{{ assigned_class.name }}</strong> — Date: <strong>{{ selected_date|date:"F d, Y" }}</strong>
+    {% if already_marked %}
+      <span class="ms-2 badge badge-soft-warning">Attendance already marked (Submitting will overwrite)</span>
+    {% else %}
+      <span class="ms-2 badge badge-soft-success">Ready for Roll Call</span>
+    {% endif %}
+  </div>
+</div>
+
+<!-- ATTENDANCE FORM TABLE -->
+<div class="card">
+  <form method="POST">
+    {% csrf_token %}
+    <div class="table-responsive">
+      <table class="table align-middle">
+        <thead>
+          <tr>
+            <th>Roll No</th>
+            <th>Photo</th>
+            <th>Student Name</th>
+            <th>Admission No</th>
+            <th class="text-center" style="width: 300px;">Attendance Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for s in students %}
+            <tr>
+              <td><strong class="font-poppins text-dark">#{{ s.roll_number }}</strong></td>
+              <td>
+                {% if s.user.profile_pic %}
+                  <img src="{{ s.user.profile_pic.url }}" alt="{{ s.user.username }}" class="avatar">
+                {% else %}
+                  <img src="{% static 'images/default_avatar.png' %}" alt="Avatar" class="avatar">
+                {% endif %}
+              </td>
+              <td>
+                <div class="fw-semibold text-dark">{{ s.user.get_full_name|default:s.user.username }}</div>
+                <small class="text-muted">Class: {{ s.student_class.name }}</small>
+              </td>
+              <td><code class="text-primary font-monospace">{{ s.admission_number }}</code></td>
+              <td>
+                {% with current_status=existing_attendance|default:'' %}
+                  <div class="attendance-toggle-group justify-content-center">
+                    <!-- Present -->
+                    <input type="radio" class="btn-check" name="status_{{ s.id }}" id="present_{{ s.id }}" value="present" 
+                      {% if existing_attendance %}
+                        {% if existing_attendance|get_item:s.id == 'present' %}checked{% endif %}
+                      {% else %}
+                        checked
+                      {% endif %}>
+                    <label class="btn btn-outline-success btn-sm font-poppins px-3" for="present_{{ s.id }}">Present</label>
+
+                    <!-- Absent -->
+                    <input type="radio" class="btn-check" name="status_{{ s.id }}" id="absent_{{ s.id }}" value="absent"
+                      {% if existing_attendance and existing_attendance|get_item:s.id == 'absent' %}checked{% endif %}>
+                    <label class="btn btn-outline-danger btn-sm font-poppins px-3" for="absent_{{ s.id }}">Absent</label>
+
+                    <!-- Late -->
+                    <input type="radio" class="btn-check" name="status_{{ s.id }}" id="late_{{ s.id }}" value="late"
+                      {% if existing_attendance and existing_attendance|get_item:s.id == 'late' %}checked{% endif %}>
+                    <label class="btn btn-outline-warning btn-sm font-poppins px-3" for="late_{{ s.id }}">Late</label>
+                  </div>
+                {% endwith %}
+              </td>
+            </tr>
+          {% empty %}
+            <tr>
+              <td colspan="5" class="text-center py-5 text-muted">
+                No active students enrolled in {{ assigned_class.name }}.
+              </td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+
+    {% if students %}
+      <div class="p-3 bg-white border-top text-end">
+        <button type="submit" class="btn btn-primary py-2 px-5 font-poppins fw-semibold shadow-sm">
+          <i class="fa-solid fa-floppy-disk me-2"></i> Submit Class Attendance
+        </button>
+      </div>
+    {% endif %}
+  </form>
+</div>
+{% endblock %}

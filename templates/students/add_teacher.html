@@ -1,0 +1,87 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Add Faculty Teacher{% endblock %}
+{% block page_title %}Add Teacher{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+  <div>
+    <h3 class="fw-bold font-poppins mb-1">Add New Faculty Teacher</h3>
+    <p class="text-secondary small mb-0">Create a teacher user account and assign class &amp; subject.</p>
+  </div>
+  <a href="{% url 'teacher_list' %}" class="btn btn-light border font-poppins">
+    <i class="fa-solid fa-arrow-left me-1"></i> Back to Teachers List
+  </a>
+</div>
+
+<div class="card p-4">
+  <form method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+
+    <div class="form-section-title">1. Account Credentials</div>
+    <div class="row g-3 mb-4">
+      <div class="col-12 col-md-6">
+        <label class="form-label">First Name *</label>
+        <input type="text" name="first_name" class="form-control" placeholder="e.g. Sarah" required>
+      </div>
+      <div class="col-12 col-md-6">
+        <label class="form-label">Last Name *</label>
+        <input type="text" name="last_name" class="form-control" placeholder="e.g. Jenkins" required>
+      </div>
+      <div class="col-12 col-md-6">
+        <label class="form-label">Username *</label>
+        <input type="text" name="username" class="form-control" placeholder="e.g. sarah_jenkins" required>
+      </div>
+      <div class="col-12 col-md-6">
+        <label class="form-label">Password *</label>
+        <input type="password" name="password" class="form-control" placeholder="Set password" required>
+      </div>
+      <div class="col-12 col-md-6">
+        <label class="form-label">Email Address</label>
+        <input type="email" name="email" class="form-control" placeholder="sarah@edumanage.edu">
+      </div>
+      <div class="col-12 col-md-6">
+        <label class="form-label">Phone Number</label>
+        <input type="text" name="phone" class="form-control" placeholder="+1 555-0192">
+      </div>
+    </div>
+
+    <div class="form-section-title">2. Professional Details</div>
+    <div class="row g-3 mb-4">
+      <div class="col-12 col-md-6">
+        <label class="form-label">Assigned Subject</label>
+        {{ teacher_form.subject }}
+      </div>
+      <div class="col-12 col-md-6">
+        <label class="form-label">Assigned Class</label>
+        {{ teacher_form.assigned_class }}
+      </div>
+      <div class="col-12 col-md-6">
+        <label class="form-label">Joining Date *</label>
+        {{ teacher_form.joining_date }}
+      </div>
+      <div class="col-12 col-md-6">
+        <label class="form-label">Highest Qualification *</label>
+        {{ teacher_form.qualification }}
+      </div>
+    </div>
+
+    <div class="form-section-title">3. Profile Photo</div>
+    <div class="row g-3 mb-4 align-items-center">
+      <div class="col-12 col-md-3 text-center">
+        <img src="{% static 'images/default_avatar.png' %}" id="profilePreview" class="rounded-circle border border-2 border-primary" style="width: 90px; height: 90px; object-fit: cover;">
+      </div>
+      <div class="col-12 col-md-9">
+        <label class="form-label">Select Photo</label>
+        <input type="file" name="profile_pic" class="form-control" id="profileImageInput" accept="image/*">
+      </div>
+    </div>
+
+    <div class="d-flex justify-content-end gap-2 border-top pt-3">
+      <a href="{% url 'teacher_list' %}" class="btn btn-light border px-4 font-poppins">Cancel</a>
+      <button type="submit" class="btn btn-primary px-4 font-poppins fw-semibold">Save Teacher Profile</button>
+    </div>
+  </form>
+</div>
+{% endblock %}

@@ -1,0 +1,108 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Add New Student{% endblock %}
+{% block page_title %}Add Student{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+  <div>
+    <h3 class="fw-bold font-poppins mb-1">Add New Student</h3>
+    <p class="text-secondary small mb-0">Register a new student account &amp; academic profile.</p>
+  </div>
+  <a href="{% url 'student_list' %}" class="btn btn-light border font-poppins">
+    <i class="fa-solid fa-arrow-left me-1"></i> Back to Students
+  </a>
+</div>
+
+<div class="card p-4">
+  <form method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+
+    <!-- SECTION 1: ACCOUNT INFORMATION -->
+    <div class="form-section-title">1. Account Credentials</div>
+    <div class="row g-3 mb-4">
+      <div class="col-12 col-md-6">
+        <label class="form-label">First Name *</label>
+        <input type="text" name="first_name" class="form-control" placeholder="e.g. Alex" required>
+      </div>
+      <div class="col-12 col-md-6">
+        <label class="form-label">Last Name *</label>
+        <input type="text" name="last_name" class="form-control" placeholder="e.g. Rivera" required>
+      </div>
+      <div class="col-12 col-md-6">
+        <label class="form-label">Username *</label>
+        <input type="text" name="username" class="form-control" placeholder="e.g. alex_rivera" required>
+      </div>
+      <div class="col-12 col-md-6">
+        <label class="form-label">Password *</label>
+        <input type="password" name="password" class="form-control" placeholder="Set user password" required>
+      </div>
+      <div class="col-12 col-md-6">
+        <label class="form-label">Email Address</label>
+        <input type="email" name="email" class="form-control" placeholder="alex@student.edumanage.edu">
+      </div>
+      <div class="col-12 col-md-6">
+        <label class="form-label">Phone Number</label>
+        <input type="text" name="phone" class="form-control" placeholder="+1 555-0199">
+      </div>
+    </div>
+
+    <!-- SECTION 2: ACADEMIC INFORMATION -->
+    <div class="form-section-title">2. Academic Assignment</div>
+    <div class="row g-3 mb-4">
+      <div class="col-12 col-md-6">
+        <label class="form-label">Class *</label>
+        {{ student_form.student_class }}
+      </div>
+      <div class="col-12 col-md-6">
+        <label class="form-label">Roll Number *</label>
+        {{ student_form.roll_number }}
+      </div>
+    </div>
+
+    <!-- SECTION 3: PERSONAL INFORMATION -->
+    <div class="form-section-title">3. Personal &amp; Family Details</div>
+    <div class="row g-3 mb-4">
+      <div class="col-12 col-md-6">
+        <label class="form-label">Date of Birth *</label>
+        {{ student_form.date_of_birth }}
+      </div>
+      <div class="col-12 col-md-6">
+        <label class="form-label">Blood Group *</label>
+        {{ student_form.blood_group }}
+      </div>
+      <div class="col-12 col-md-6">
+        <label class="form-label">Parent / Guardian Name *</label>
+        {{ student_form.parent_name }}
+      </div>
+      <div class="col-12 col-md-6">
+        <label class="form-label">Parent Contact Phone *</label>
+        {{ student_form.parent_phone }}
+      </div>
+      <div class="col-12">
+        <label class="form-label">Residential Address *</label>
+        {{ student_form.address }}
+      </div>
+    </div>
+
+    <!-- SECTION 4: PROFILE PICTURE -->
+    <div class="form-section-title">4. Photo Upload</div>
+    <div class="row g-3 mb-4 align-items-center">
+      <div class="col-12 col-md-3 text-center">
+        <img src="{% static 'images/default_avatar.png' %}" id="profilePreview" class="rounded-circle border border-2 border-primary mb-2" style="width: 90px; height: 90px; object-fit: cover;">
+      </div>
+      <div class="col-12 col-md-9">
+        <label class="form-label">Select Profile Image</label>
+        <input type="file" name="profile_pic" class="form-control" id="profileImageInput" accept="image/*">
+        <small class="text-muted">Upload PNG or JPG image (Max 2MB)</small>
+      </div>
+    </div>
+
+    <div class="d-flex justify-content-end gap-2 border-top pt-3">
+      <a href="{% url 'student_list' %}" class="btn btn-light border px-4 font-poppins">Cancel</a>
+      <button type="submit" class="btn btn-primary px-4 font-poppins fw-semibold"><i class="fa-solid fa-check me-1"></i> Save Student Record</button>
+    </div>
+  </form>
+</div>
+{% endblock %}

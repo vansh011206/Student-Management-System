@@ -1,0 +1,105 @@
+{% load static %}
+<aside class="sidebar">
+  <div class="sidebar-header">
+    <div class="sidebar-logo-icon">
+      <i class="fa-solid fa-graduation-cap"></i>
+    </div>
+    <div>
+      <div class="sidebar-brand-name">EduManage</div>
+      <div class="sidebar-role-badge">
+        {% if user.is_admin %}Administrator{% elif user.is_teacher %}Teacher Portal{% elif user.is_student %}Student Portal{% else %}User{% endif %}
+      </div>
+    </div>
+  </div>
+
+  <nav class="sidebar-nav">
+    {% if user.is_admin %}
+      <div class="nav-category">Main Menu</div>
+      <a href="{% url 'admin_dashboard' %}" class="nav-link">
+        <i class="fa-solid fa-chart-pie"></i>
+        <span>Dashboard</span>
+      </a>
+
+      <div class="nav-category">People</div>
+      <a href="{% url 'student_list' %}" class="nav-link">
+        <i class="fa-solid fa-user-graduate"></i>
+        <span>Students</span>
+      </a>
+      <a href="{% url 'teacher_list' %}" class="nav-link">
+        <i class="fa-solid fa-chalkboard-user"></i>
+        <span>Teachers</span>
+      </a>
+
+      <div class="nav-category">Academic Structure</div>
+      <a href="{% url 'class_list' %}" class="nav-link">
+        <i class="fa-solid fa-school"></i>
+        <span>Classes</span>
+      </a>
+      <a href="{% url 'subject_list' %}" class="nav-link">
+        <i class="fa-solid fa-book-open"></i>
+        <span>Subjects</span>
+      </a>
+
+      <div class="nav-category">System</div>
+      <a href="{% url 'profile' %}" class="nav-link">
+        <i class="fa-solid fa-gear"></i>
+        <span>My Settings</span>
+      </a>
+
+    {% elif user.is_teacher %}
+      <div class="nav-category">Teacher Panel</div>
+      <a href="{% url 'teacher_dashboard' %}" class="nav-link">
+        <i class="fa-solid fa-chart-line"></i>
+        <span>Dashboard</span>
+      </a>
+      <a href="{% url 'mark_attendance' %}" class="nav-link">
+        <i class="fa-solid fa-calendar-check"></i>
+        <span>Mark Attendance</span>
+      </a>
+      <a href="{% url 'attendance_report' %}" class="nav-link">
+        <i class="fa-solid fa-file-invoice"></i>
+        <span>Attendance Report</span>
+      </a>
+
+      <div class="nav-category">Exams & Grades</div>
+      <a href="{% url 'exam_list' %}" class="nav-link">
+        <i class="fa-solid fa-file-pen"></i>
+        <span>Manage Exams</span>
+      </a>
+
+      <div class="nav-category">Account</div>
+      <a href="{% url 'profile' %}" class="nav-link">
+        <i class="fa-solid fa-user-gear"></i>
+        <span>My Profile</span>
+      </a>
+
+    {% elif user.is_student %}
+      <div class="nav-category">Student Portal</div>
+      <a href="{% url 'student_dashboard' %}" class="nav-link">
+        <i class="fa-solid fa-house"></i>
+        <span>Dashboard</span>
+      </a>
+      <a href="{% url 'my_attendance' %}" class="nav-link">
+        <i class="fa-solid fa-calendar-days"></i>
+        <span>My Attendance</span>
+      </a>
+      <a href="{% url 'my_results' %}" class="nav-link">
+        <i class="fa-solid fa-award"></i>
+        <span>My Results</span>
+      </a>
+
+      <div class="nav-category">Account</div>
+      <a href="{% url 'profile' %}" class="nav-link">
+        <i class="fa-solid fa-id-card"></i>
+        <span>My Profile</span>
+      </a>
+    {% endif %}
+
+    <div class="mt-4 pt-3 border-top">
+      <a href="{% url 'logout' %}" class="nav-link text-danger">
+        <i class="fa-solid fa-arrow-right-from-bracket"></i>
+        <span>Logout</span>
+      </a>
+    </div>
+  </nav>
+</aside>

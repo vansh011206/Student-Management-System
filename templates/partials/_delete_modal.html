@@ -1,0 +1,20 @@
+<!-- Delete Confirmation Modal -->
+<div class="modal fade" id="deleteConfirmModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content border-0 shadow rounded-4">
+      <div class="modal-body text-center p-4">
+        <div class="mb-3 text-danger">
+          <i class="fa-solid fa-circle-exclamation display-4"></i>
+        </div>
+        <h5 class="fw-bold font-poppins mb-2" id="deleteModalLabel">Confirm Deletion</h5>
+        <p class="text-secondary small mb-4">
+          Are you sure you want to delete <strong class="item-name text-dark">this record</strong>? This action cannot be undone.
+        </p>
+        <div class="d-flex justify-content-center gap-3">
+          <button type="button" class="btn btn-light px-4 rounded-3 text-secondary" data-bs-dismiss="modal">Cancel</button>
+          <a href="#" class="btn btn-danger confirm-delete-btn px-4 rounded-3 fw-semibold">Yes, Delete</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,82 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Subject Management{% endblock %}
+{% block page_title %}Subjects List{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+  <div>
+    <h3 class="fw-bold font-poppins mb-1">Academic Subjects</h3>
+    <p class="text-secondary small mb-0">Configure subjects and link them to academic classes.</p>
+  </div>
+</div>
+
+<div class="row g-4">
+  <!-- ADD SUBJECT FORM (col-4) -->
+  <div class="col-12 col-lg-4">
+    <div class="card p-4">
+      <h5 class="fw-bold font-poppins text-dark mb-3"><i class="fa-solid fa-plus me-2 text-primary"></i>Add New Subject</h5>
+      <form method="POST">
+        {% csrf_token %}
+        <div class="mb-3">
+          <label class="form-label">Subject Name *</label>
+          {{ form.name }}
+        </div>
+        <div class="mb-3">
+          <label class="form-label">Associated Class *</label>
+          {{ form.class_name }}
+        </div>
+        <div class="mb-3">
+          <label class="form-label">Subject Code *</label>
+          {{ form.code }}
+          <small class="form-text text-muted">Must be unique (e.g. MATH10)</small>
+        </div>
+        <button type="submit" class="btn btn-primary w-100 font-poppins fw-semibold">Save Subject</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- SUBJECT LIST TABLE (col-8) -->
+  <div class="col-12 col-lg-8">
+    <div class="card">
+      <div class="card-header">
+        <h5 class="card-title"><i class="fa-solid fa-book-open me-2 text-primary"></i>Configured Subjects</h5>
+        <span class="badge badge-soft-primary">{{ subjects.count }} Total</span>
+      </div>
+      <div class="table-responsive">
+        <table class="table align-middle">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Subject Name</th>
+              <th>Subject Code</th>
+              <th>Class</th>
+              <th class="text-end">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for s in subjects %}
+              <tr>
+                <td class="fw-semibold text-muted">{{ forloop.counter }}</td>
+                <td><strong class="text-dark font-poppins fs-6">{{ s.name }}</strong></td>
+                <td><code class="text-primary font-monospace fw-bold">{{ s.code }}</code></td>
+                <td><span class="badge badge-soft-primary">{{ s.class_name.name }}</span></td>
+                <td class="text-end">
+                  <button type="button" onclick="confirmDelete('{% url 'delete_subject' s.id %}', '{{ s.name|escapejs }}')" class="btn-action btn-action-delete" title="Delete Subject">
+                    <i class="fa-regular fa-trash-can"></i>
+                  </button>
+                </td>
+              </tr>
+            {% empty %}
+              <tr>
+                <td colspan="5" class="text-center py-4 text-muted">No subjects added yet.</td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

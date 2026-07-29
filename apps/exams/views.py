@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from apps.accounts.decorators import teacher_required, student_required
 from apps.students.models import Student
-from apps.academics.models import Class, Subject
+from apps.academics.models import Class
 from .models import Exam, Result
 from .forms import ExamForm
 

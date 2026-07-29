@@ -48,7 +48,11 @@
 
   <div class="col-12 col-md-4">
     <div class="stat-card">
-      <div class="stat-icon" style="background-color: {% if today_marked %}#ECFDF5; color: #10B981;{% else %}#FFFBEB; color: #F59E0B;{% endif %}">
+      {% if today_marked %}
+        <div class="stat-icon" style="background-color: #ECFDF5; color: #10B981;">
+      {% else %}
+        <div class="stat-icon" style="background-color: #FFFBEB; color: #F59E0B;">
+      {% endif %}
         <i class="fa-solid {% if today_marked %}fa-circle-check{% else %}fa-clock{% endif %}"></i>
       </div>
       <div>

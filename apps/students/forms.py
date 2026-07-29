@@ -1,7 +1,5 @@
 from django import forms
-from apps.accounts.models import CustomUser
 from .models import Student, Teacher
-from apps.academics.models import Class, Subject
 
 class StudentForm(forms.ModelForm):
     class Meta:

@@ -10,11 +10,7 @@
   <div class="col-12 col-lg-4">
     <div class="card text-center p-4">
       <div class="position-relative d-inline-block mx-auto mb-3">
-        {% if user_obj.profile_pic %}
-          <img src="{{ user_obj.profile_pic.url }}" alt="{{ user_obj.username }}" id="profilePreview" class="photo-preview-img">
-        {% else %}
-          <img src="{% static 'images/default_avatar.png' %}" alt="Avatar" id="profilePreview" class="photo-preview-img">
-        {% endif %}
+        <img src="{% if user_obj.profile_pic %}{{ user_obj.profile_pic.url }}{% else %}{% static 'images/default_avatar.png' %}{% endif %}" alt="{{ user_obj.username }}" id="profilePreview" class="photo-preview-img">
       </div>
       <h4 class="fw-bold font-poppins text-dark mb-1">{{ user_obj.get_full_name|default:user_obj.username }}</h4>
       <p class="text-secondary small mb-2">@{{ user_obj.username }}</p>

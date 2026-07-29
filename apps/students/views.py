@@ -1,14 +1,14 @@
 import csv
 from django.shortcuts import render, redirect, get_object_or_404
-from django.http import HttpResponse, Http404
+from django.http import HttpResponse
 from django.db.models import Q
 from django.core.paginator import Paginator
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 
-from apps.accounts.decorators import admin_required, teacher_required, student_required
+from apps.accounts.decorators import admin_required, student_required
 from apps.accounts.models import CustomUser
-from apps.academics.models import Class, Subject
+from apps.academics.models import Class
 from .models import Student, Teacher
 from .forms import StudentForm, TeacherForm
 from .utils import generate_admission_number, generate_employee_id, render_to_pdf

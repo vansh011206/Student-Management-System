@@ -72,7 +72,7 @@
                 <a href="{% url 'edit_teacher' t.id %}" class="btn-action btn-action-edit" title="Edit Teacher">
                   <i class="fa-regular fa-pen-to-square"></i>
                 </a>
-                <button type="button" onclick="confirmDelete('{% url 'delete_teacher' t.id %}', '{{ t.user.get_full_name|default:t.user.username|escapejs }}')" class="btn-action btn-action-delete" title="Delete Teacher">
+                <button type="button" onclick="confirmDelete('{% url "delete_teacher" t.id %}', '{{ t.user.get_full_name|default:t.user.username|escapejs }}')" class="btn-action btn-action-delete" title="Delete Teacher">
                   <i class="fa-regular fa-trash-can"></i>
                 </button>
               </div>

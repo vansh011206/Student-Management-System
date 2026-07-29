@@ -59,7 +59,7 @@
                   <span class="badge badge-soft-primary">{{ c.subjects.count }} Subjects</span>
                 </td>
                 <td class="text-end">
-                  <button type="button" onclick="confirmDelete('{% url 'delete_class' c.id %}', '{{ c.name|escapejs }}')" class="btn-action btn-action-delete" title="Delete Class">
+                  <button type="button" onclick="confirmDelete('{% url "delete_class" c.id %}', '{{ c.name|escapejs }}')" class="btn-action btn-action-delete" title="Delete Class">
                     <i class="fa-regular fa-trash-can"></i>
                   </button>
                 </td>

@@ -63,7 +63,7 @@
                 <td><code class="text-primary font-monospace fw-bold">{{ s.code }}</code></td>
                 <td><span class="badge badge-soft-primary">{{ s.class_name.name }}</span></td>
                 <td class="text-end">
-                  <button type="button" onclick="confirmDelete('{% url "delete_subject" s.id %}', '{{ s.name|escapejs }}')" class="btn-action btn-action-delete" title="Delete Subject">
+                  <button type="button" data-url="{% url 'delete_subject' s.id %}" data-name="{{ s.name|escapejs }}" onclick="confirmDelete(this.dataset.url, this.dataset.name)" class="btn-action btn-action-delete" title="Delete Subject">
                     <i class="fa-regular fa-trash-can"></i>
                   </button>
                 </td>

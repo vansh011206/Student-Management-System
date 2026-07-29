@@ -1,15 +1,20 @@
 {% load static %}
 <aside class="sidebar">
-  <div class="sidebar-header">
-    <div class="sidebar-logo-icon">
-      <i class="fa-solid fa-graduation-cap"></i>
-    </div>
-    <div>
-      <div class="sidebar-brand-name">EduManage</div>
-      <div class="sidebar-role-badge">
-        {% if user.is_admin %}Administrator{% elif user.is_teacher %}Teacher Portal{% elif user.is_student %}Student Portal{% else %}User{% endif %}
+  <div class="sidebar-header justify-content-between">
+    <div class="d-flex align-items-center gap-2">
+      <div class="sidebar-logo-icon">
+        <i class="fa-solid fa-graduation-cap"></i>
+      </div>
+      <div>
+        <div class="sidebar-brand-name">EduManage</div>
+        <div class="sidebar-role-badge">
+          {% if user.is_admin %}Administrator{% elif user.is_teacher %}Teacher Portal{% elif user.is_student %}Student Portal{% else %}User{% endif %}
+        </div>
       </div>
     </div>
+    <button type="button" class="sidebar-close-btn d-md-none" title="Close Menu">
+      <i class="fa-solid fa-xmark"></i>
+    </button>
   </div>
 
   <nav class="sidebar-nav">

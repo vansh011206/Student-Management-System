@@ -38,11 +38,11 @@
             {% with res=existing_results|get_item:s.id %}
               <tr>
                 <td><strong class="font-poppins text-dark">#{{ s.roll_number }}</strong></td>
-                <td>
-                  {% if s.user.profile_pic %}
-                    <img src="{{ s.user.profile_pic.url }}" alt="{{ s.user.username }}" class="avatar">
+                <td style="width: 50px;">
+                  {% if s.user.profile_pic and s.user.profile_pic.name != 'default_avatar.png' %}
+                    <img src="{{ s.user.profile_pic.url }}" alt="{{ s.user.username }}" class="avatar" width="38" height="38" style="width: 38px !important; height: 38px !important; min-width: 38px !important; min-height: 38px !important; max-width: 38px !important; max-height: 38px !important; border-radius: 50% !important; object-fit: cover !important; border: 2px solid #EEF2FF !important;">
                   {% else %}
-                    <img src="{% static 'images/default_avatar.png' %}" alt="Avatar" class="avatar">
+                    <img src="{% static 'images/default_avatar.png' %}" alt="Avatar" class="avatar" width="38" height="38" style="width: 38px !important; height: 38px !important; min-width: 38px !important; min-height: 38px !important; max-width: 38px !important; max-height: 38px !important; border-radius: 50% !important; object-fit: cover !important; border: 2px solid #EEF2FF !important;">
                   {% endif %}
                 </td>
                 <td>

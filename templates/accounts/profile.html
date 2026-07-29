@@ -11,9 +11,9 @@
     <div class="card text-center p-4">
       <div class="position-relative d-inline-block mx-auto mb-3">
         {% if user_obj.profile_pic %}
-          <img src="{{ user_obj.profile_pic.url }}" alt="{{ user_obj.username }}" id="profilePreview" class="rounded-circle border border-3 border-primary shadow-sm" style="width: 110px; height: 110px; object-fit: cover;">
+          <img src="{{ user_obj.profile_pic.url }}" alt="{{ user_obj.username }}" id="profilePreview" class="photo-preview-img">
         {% else %}
-          <img src="{% static 'images/default_avatar.png' %}" alt="Avatar" id="profilePreview" class="rounded-circle border border-3 border-primary shadow-sm" style="width: 110px; height: 110px; object-fit: cover;">
+          <img src="{% static 'images/default_avatar.png' %}" alt="Avatar" id="profilePreview" class="photo-preview-img">
         {% endif %}
       </div>
       <h4 class="fw-bold font-poppins text-dark mb-1">{{ user_obj.get_full_name|default:user_obj.username }}</h4>

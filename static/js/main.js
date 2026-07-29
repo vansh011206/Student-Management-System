@@ -11,6 +11,17 @@ document.addEventListener('DOMContentLoaded', function() {
     }, 200);
   }
 
+  // 1b. Initialize Modern Flatpickr Date Picker
+  if (typeof flatpickr !== 'undefined') {
+    flatpickr('input[type="date"]', {
+      dateFormat: "Y-m-d",
+      altInput: true,
+      altFormat: "F j, Y",
+      allowInput: true,
+      animate: true
+    });
+  }
+
   // 2. Sidebar Mobile Toggle
   const sidebar = document.querySelector('.sidebar');
   const sidebarToggle = document.querySelector('.sidebar-toggle');

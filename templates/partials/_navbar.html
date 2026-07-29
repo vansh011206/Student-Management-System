@@ -28,7 +28,7 @@
 
     <div class="dropdown">
       <a href="#" class="d-flex align-items-center text-decoration-none dropdown-toggle gap-2" data-bs-toggle="dropdown" aria-expanded="false">
-        {% if user.profile_pic %}
+        {% if user.profile_pic and user.profile_pic.name != 'default_avatar.png' %}
           <img src="{{ user.profile_pic.url }}" alt="{{ user.username }}" class="user-avatar-sm">
         {% else %}
           <img src="{% static 'images/default_avatar.png' %}" alt="Avatar" class="user-avatar-sm">

@@ -51,11 +51,11 @@
         {% for t in teachers %}
           <tr>
             <td class="fw-semibold text-muted">{{ forloop.counter }}</td>
-            <td>
-              {% if t.user.profile_pic %}
-                <img src="{{ t.user.profile_pic.url }}" alt="{{ t.user.username }}" class="avatar">
+            <td style="width: 50px;">
+              {% if t.user.profile_pic and t.user.profile_pic.name != 'default_avatar.png' %}
+                <img src="{{ t.user.profile_pic.url }}" alt="{{ t.user.username }}" class="avatar" width="38" height="38" style="width: 38px !important; height: 38px !important; min-width: 38px !important; min-height: 38px !important; max-width: 38px !important; max-height: 38px !important; border-radius: 50% !important; object-fit: cover !important; border: 2px solid #EEF2FF !important;">
               {% else %}
-                <img src="{% static 'images/default_avatar.png' %}" alt="Avatar" class="avatar">
+                <img src="{% static 'images/default_avatar.png' %}" alt="Avatar" class="avatar" width="38" height="38" style="width: 38px !important; height: 38px !important; min-width: 38px !important; min-height: 38px !important; max-width: 38px !important; max-height: 38px !important; border-radius: 50% !important; object-fit: cover !important; border: 2px solid #EEF2FF !important;">
               {% endif %}
             </td>
             <td>
